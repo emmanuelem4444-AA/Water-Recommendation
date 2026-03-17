@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plant Water Requirement Predictor</title>
+  <meta name="description" content="Predict the daily water requirement for your plants using AI-powered machine learning." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+
+  <!-- Animated background particles -->
+  <div class="bg-particles">
+    <span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span>
+    <span></span><span></span>
+  </div>
+
+  <!-- Hero / Header -->
+  <header class="hero">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <i class="fa-solid fa-seedling"></i>
+        <span>AI-Powered Agricultural Tool</span>
+      </div>
+      <h1 class="hero-title">
+        Plant Water<br /><span class="gradient-text">Requirement Predictor</span>
+      </h1>
+      <p class="hero-subtitle">
+        Enter your plant details below and our trained machine learning model will
+        calculate the optimal daily water requirement for healthy growth.
+      </p>
+    </div>
+    <!-- Decorative leaf icons -->
+    <div class="hero-deco">
+      <i class="fa-solid fa-leaf deco-leaf deco-1"></i>
+      <i class="fa-solid fa-leaf deco-leaf deco-2"></i>
+      <i class="fa-solid fa-leaf deco-leaf deco-3"></i>
+    </div>
+  </header>
+
+  <!-- Main content -->
+  <main class="main-content">
+
+    <!-- Stats bar -->
+    <div class="stats-bar">
+      <div class="stat-item">
+        <i class="fa-solid fa-brain"></i>
+        <div>
+          <span class="stat-value">ML Powered</span>
+          <span class="stat-label">Random Forest Model</span>
+        </div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <i class="fa-solid fa-droplet"></i>
+        <div>
+          <span class="stat-value">Precision</span>
+          <span class="stat-label">L/day Accuracy</span>
+        </div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <i class="fa-solid fa-microchip"></i>
+        <div>
+          <span class="stat-value">Real-time</span>
+          <span class="stat-label">Instant Results</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Prediction form card -->
+    <div class="card form-card">
+      <div class="card-header">
+        <div class="card-icon">
+          <i class="fa-solid fa-flask"></i>
+        </div>
+        <div>
+          <h2 class="card-title">Plant Details</h2>
+          <p class="card-subtitle">Fill in all fields for an accurate prediction</p>
+        </div>
+      </div>
+
+      <form id="predictionForm" novalidate>
+
+        <!-- Row 1: Plant & Area -->
+        <div class="form-row">
+          <div class="form-group" id="group-plant">
+            <label for="plant" class="form-label">
+              <i class="fa-solid fa-seedling label-icon"></i>
+              Plant Name
+            </label>
+            <div class="select-wrapper">
+              <select id="plant" name="plant" class="form-control" required>
+                <option value="">— Select a plant —</option>
+                <option value="Areca Palm">🌴 Areca Palm</option>
+                <option value="Arecanut">🌿 Arecanut</option>
+                <option value="Bougainvillea">🌸 Bougainvillea</option>
+                <option value="Croton">🍃 Croton</option>
+              </select>
+              <i class="fa-solid fa-chevron-down select-arrow"></i>
+            </div>
+            <span class="field-error" id="error-plant"></span>
+          </div>
+
+          <div class="form-group" id="group-area">
+            <label for="area" class="form-label">
+              <i class="fa-solid fa-vector-square label-icon"></i>
+              Area (m²)
+            </label>
+            <div class="input-wrapper">
+              <input
+                type="number"
+                id="area"
+                name="area"
+                class="form-control"
+                placeholder="e.g. 5.0"
+                min="0.1"
+                step="0.1"
+                required
+              />
+              <span class="input-unit">m²</span>
+            </div>
+            <span class="field-error" id="error-area"></span>
+          </div>
+        </div>
+
+        <!-- Row 2: Soil Type & Climate -->
+        <div class="form-row">
+          <div class="form-group" id="group-soil">
+            <label for="soilType" class="form-label">
+              <i class="fa-solid fa-mound label-icon"></i>
+              Soil Type
+            </label>
+            <div class="select-wrapper">
+              <select id="soilType" name="soilType" class="form-control" required>
+                <option value="">— Select soil type —</option>
+                <option value="Alluvial">Alluvial</option>
+                <option value="Clay Loam">Clay Loam</option>
+                <option value="Laterite">Laterite</option>
+                <option value="Red Loam">Red Loam</option>
+                <option value="Sandy Loam">Sandy Loam</option>
+              </select>
+              <i class="fa-solid fa-chevron-down select-arrow"></i>
+            </div>
+            <span class="field-error" id="error-soil"></span>
+          </div>
+
+          <div class="form-group" id="group-climate">
+            <label for="climate" class="form-label">
+              <i class="fa-solid fa-cloud-sun label-icon"></i>
+              Climate
+            </label>
+            <div class="select-wrapper">
+              <select id="climate" name="climate" class="form-control" required>
+                <option value="">— Select climate —</option>
+                <option value="Humid Tropical">Humid Tropical</option>
+                <option value="Tropical Monsoon">Tropical Monsoon</option>
+                <option value="Tropical Wet-Dry">Tropical Wet-Dry</option>
+                <option value="Wet Tropical">Wet Tropical</option>
+              </select>
+              <i class="fa-solid fa-chevron-down select-arrow"></i>
+            </div>
+            <span class="field-error" id="error-climate"></span>
+          </div>
+        </div>
+
+        <!-- Row 3: Temperature -->
+        <div class="form-row single">
+          <div class="form-group" id="group-temp">
+            <label for="temperature" class="form-label">
+              <i class="fa-solid fa-temperature-half label-icon"></i>
+              Temperature (°C)
+            </label>
+            <div class="input-wrapper">
+              <input
+                type="number"
+                id="temperature"
+                name="temperature"
+                class="form-control"
+                placeholder="e.g. 30.0"
+                min="-50"
+                max="70"
+                step="0.1"
+                required
+              />
+              <span class="input-unit">°C</span>
+            </div>
+            <span class="field-error" id="error-temp"></span>
+          </div>
+        </div>
+
+        <!-- Submit button -->
+        <button type="submit" id="predictBtn" class="btn-predict">
+          <span class="btn-text">
+            <i class="fa-solid fa-droplet"></i>
+            Predict Water Requirement
+          </span>
+          <span class="btn-spinner" id="spinner">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+            Calculating...
+          </span>
+        </button>
+
+      </form>
+    </div>
+
+    <!-- Result card (hidden until prediction) -->
+    <div class="card result-card" id="resultCard">
+      <div class="result-icon-wrapper">
+        <div class="result-icon">
+          <i class="fa-solid fa-droplet"></i>
+        </div>
+        <div class="result-ripples">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+      <p class="result-label">Estimated Water Requirement</p>
+      <div class="result-value" id="resultValue">—</div>
+      <p class="result-unit">litres per day</p>
+      <div class="result-divider"></div>
+      <div class="result-meta" id="resultMeta"></div>
+      <div class="result-tips" id="resultTips"></div>
+    </div>
+
+    <!-- Error card (hidden until error) -->
+    <div class="card error-card" id="errorCard">
+      <div class="error-icon">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+      </div>
+      <p class="error-title">Prediction Error</p>
+      <p class="error-message" id="errorMessage"></p>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>
+      <i class="fa-solid fa-leaf"></i>
+      Plant Water Requirement Predictor &mdash; Powered by RandomForest ML
+    </p>
+  </footer>
+
+  <script>
+    // ── Utility helpers ──────────────────────────────────────────────────────
+    const $ = id => document.getElementById(id);
+
+    function showCard(id) {
+      ['resultCard', 'errorCard'].forEach(c => {
+        const el = $(c);
+        el.classList.remove('visible');
+      });
+      if (id) {
+        const el = $(id);
+        el.classList.add('visible');
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+
+    // ── Input validation ─────────────────────────────────────────────────────
+    function setError(groupId, errorId, message) {
+      const group = $(groupId);
+      const err   = $(errorId);
+      if (message) {
+        group.classList.add('has-error');
+        err.textContent = message;
+      } else {
+        group.classList.remove('has-error');
+        err.textContent = '';
+      }
+    }
+
+    function clearErrors() {
+      [
+        ['group-plant',   'error-plant'],
+        ['group-area',    'error-area'],
+        ['group-soil',    'error-soil'],
+        ['group-climate', 'error-climate'],
+        ['group-temp',    'error-temp'],
+      ].forEach(([g, e]) => setError(g, e, ''));
+    }
+
+    function validate(plant, area, soil, climate, temperature) {
+      let valid = true;
+      if (!plant) {
+        setError('group-plant', 'error-plant', 'Please select a plant.');
+        valid = false;
+      }
+      const areaNum = parseFloat(area);
+      if (!area || isNaN(areaNum) || areaNum <= 0) {
+        setError('group-area', 'error-area', 'Please enter a valid area greater than 0.');
+        valid = false;
+      }
+      if (!soil) {
+        setError('group-soil', 'error-soil', 'Please select a soil type.');
+        valid = false;
+      }
+      if (!climate) {
+        setError('group-climate', 'error-climate', 'Please select a climate.');
+        valid = false;
+      }
+      const tempNum = parseFloat(temperature);
+      if (!temperature && temperature !== 0 || isNaN(tempNum)) {
+        setError('group-temp', 'error-temp', 'Please enter a valid temperature.');
+        valid = false;
+      } else if (tempNum < -50 || tempNum > 70) {
+        setError('group-temp', 'error-temp', 'Temperature must be between -50°C and 70°C.');
+        valid = false;
+      }
+      return valid;
+    }
+
+    // ── Water-level tip helper ────────────────────────────────────────────────
+    function getWaterTip(litres) {
+      if (litres < 2)   return { icon: '💧', text: 'Low water need — water every 2-3 days.' };
+      if (litres < 5)   return { icon: '🪣', text: 'Moderate need — water daily, morning preferred.' };
+      if (litres < 10)  return { icon: '🌊', text: 'High need — ensure consistent daily watering.' };
+      return              { icon: '⚠️', text: 'Very high need — consider drip irrigation.' };
+    }
+
+    // ── Form submission ──────────────────────────────────────────────────────
+    $('predictionForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      clearErrors();
+      showCard(null);
+
+      const plant       = $('plant').value;
+      const area        = $('area').value;
+      const soilType    = $('soilType').value;
+      const climate     = $('climate').value;
+      const temperature = $('temperature').value;
+
+      if (!validate(plant, area, soilType, climate, temperature)) return;
+
+      // Show spinner
+      const btn    = $('predictBtn');
+      const btnTxt = btn.querySelector('.btn-text');
+      const spinner = $('spinner');
+      btn.disabled = true;
+      btnTxt.style.display = 'none';
+      spinner.style.display = 'flex';
+
+      try {
+        const response = await fetch('/predict', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            Plant:         plant,
+            Area_m2:       parseFloat(area),
+            Soil_Type:     soilType,
+            Climate:       climate,
+            Temperature_C: parseFloat(temperature),
+          }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || data.error) {
+          $('errorMessage').textContent = data.error || 'An unknown error occurred.';
+          showCard('errorCard');
+        } else {
+          const litres = data.water_L_per_day;
+          $('resultValue').textContent = litres.toFixed(2) + ' L/day';
+
+          // Meta info
+          $('resultMeta').innerHTML = `
+            <div class="meta-chip"><i class="fa-solid fa-seedling"></i> ${plant}</div>
+            <div class="meta-chip"><i class="fa-solid fa-vector-square"></i> ${parseFloat(area).toFixed(1)} m²</div>
+            <div class="meta-chip"><i class="fa-solid fa-cloud-sun"></i> ${climate}</div>
+            <div class="meta-chip"><i class="fa-solid fa-temperature-half"></i> ${parseFloat(temperature).toFixed(1)} °C</div>
+          `;
+
+          // Tip
+          const tip = getWaterTip(litres);
+          $('resultTips').innerHTML = `
+            <div class="tip-box">
+              <span class="tip-icon">${tip.icon}</span>
+              <span>${tip.text}</span>
+            </div>
+          `;
+
+          showCard('resultCard');
+        }
+      } catch (err) {
+        $('errorMessage').textContent = 'Could not connect to the server. Make sure the Flask app is running.';
+        showCard('errorCard');
+      } finally {
+        btn.disabled = false;
+        btnTxt.style.display = 'flex';
+        spinner.style.display = 'none';
+      }
+    });
+
+    // ── Live input feedback (clear error on change) ───────────────────────────
+    $('plant').addEventListener('change',       () => setError('group-plant',   'error-plant',   ''));
+    $('area').addEventListener('input',         () => setError('group-area',    'error-area',    ''));
+    $('soilType').addEventListener('change',    () => setError('group-soil',    'error-soil',    ''));
+    $('climate').addEventListener('change',     () => setError('group-climate', 'error-climate', ''));
+    $('temperature').addEventListener('input',  () => setError('group-temp',    'error-temp',    ''));
+  </script>
+
+</body>
+</html>

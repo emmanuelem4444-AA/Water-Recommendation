@@ -1,0 +1,1 @@
+PLANTS:['Areca Palm', 'Arecanut', 'Bougainvillea', 'Croton']|SOILS:['Alluvial', 'Clay Loam', 'Laterite', 'Red Loam', 'Sandy Loam']|CLIMATES:['Humid Tropical', 'Tropical Monsoon', 'Tropical Wet-Dry', 'Wet Tropical']
